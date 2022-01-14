@@ -2,6 +2,9 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+import app from './firebase';
+
+console.log(app);
 
 ReactDOM.render(
   <React.StrictMode>
