@@ -1,8 +1,14 @@
 import React, { useState } from 'react';
+import {
+  getAuth,
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+} from 'firebase/auth';
 
 const Auth = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [newAccount, setNewAccount] = useState(true);
   const onChange = (event) => {
     const {
       target: { name, value },
@@ -15,6 +21,30 @@ const Auth = () => {
   };
   const onSubmit = (event) => {
     event.preventDefault();
+    const auth = getAuth();
+    if (newAccount) {
+      createUserWithEmailAndPassword(auth, email, password)
+        .then((userCredential) => {
+          const user = userCredential.user;
+          console.log(user);
+        })
+        .catch((error) => {
+          const errorCode = error.code;
+          const errorMessage = error.message;
+          console.log('errorCode ', errorCode, ' : ', errorMessage);
+        });
+    } else {
+      signInWithEmailAndPassword(auth, email, password)
+        .then((userCredential) => {
+          const user = userCredential.user;
+          console.log(user);
+        })
+        .catch((error) => {
+          const errorCode = error.code;
+          const errorMessage = error.message;
+          console.log('errorCode ', errorCode, ' : ', errorMessage);
+        });
+    }
   };
   return (
     <div>
@@ -35,7 +65,7 @@ const Auth = () => {
           value={password}
           onChange={onChange}
         />
-        <input type="submit" value="Log In" />
+        <input type="submit" value={newAccount ? 'Create Account' : 'Log In'} />
       </form>
       <div>
         <button>Continue with Google</button>
