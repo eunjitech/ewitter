@@ -3,6 +3,9 @@ import {
   getAuth,
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
+  signInWithPopup,
+  GoogleAuthProvider,
+  GithubAuthProvider,
 } from 'firebase/auth';
 
 const Auth = () => {
@@ -10,6 +13,20 @@ const Auth = () => {
   const [password, setPassword] = useState('');
   const [newAccount, setNewAccount] = useState(true);
   const [error, setError] = useState('');
+
+  const onSocialLogin = async (event) => {
+    const auth = getAuth();
+    const {
+      target: { name },
+    } = event;
+    let provider;
+    if (name === 'google') {
+      provider = new GoogleAuthProvider();
+    } else if (name === 'github') {
+      provider = new GithubAuthProvider();
+    }
+    const data = await signInWithPopup(auth, provider);
+  };
 
   const toggleAccount = () => {
     setNewAccount((prev) => !prev);
@@ -27,6 +44,7 @@ const Auth = () => {
   const onSubmit = (event) => {
     event.preventDefault();
     const auth = getAuth();
+
     if (newAccount) {
       createUserWithEmailAndPassword(auth, email, password)
         .then((userCredential) => {
@@ -79,8 +97,12 @@ const Auth = () => {
         {newAccount ? 'Sign In' : 'Create Account'}
       </span>
       <div>
-        <button>Continue with Google</button>
-        <button>Continue with Github</button>
+        <button onClick={onSocialLogin} name="google">
+          Continue with Google
+        </button>
+        <button onClick={onSocialLogin} name="github">
+          Continue with Github
+        </button>
       </div>
     </div>
   );
