@@ -25,7 +25,7 @@ const Auth = () => {
     } else if (name === 'github') {
       provider = new GithubAuthProvider();
     }
-    const data = await signInWithPopup(auth, provider);
+    const data = await signInWithPopup(auth, provider); //로그인한 user data !!이거없음 팝업창 안뜸
   };
 
   const toggleAccount = () => {
