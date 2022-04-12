@@ -1,4 +1,6 @@
+import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
 import React, { useState } from 'react';
+import { dbService } from '../fbase';
 
 const Home = () => {
   const [ewitt, setEwitt] = useState('');
@@ -9,8 +11,14 @@ const Home = () => {
     setEwitt(value);
     console.log('ewitt', ewitt);
   };
-  const onSubmit = (e) => {
+  const onSubmit = async (e) => {
     e.preventDefault();
+    await addDoc(collection(dbService, 'ewittes'), {
+      ewitt,
+      createdAt: serverTimestamp(),
+    });
+
+    setEwitt('');
   };
 
   return (
